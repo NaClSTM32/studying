@@ -1,0 +1,75 @@
+#include<iostream>
+#include <algorithm>
+using namespace std;
+
+int find(int x,int pr[]){
+    if (pr[x] == x) return x;
+    else return pr[x] = find(pr[x],pr);
+}
+
+void union(int x,int y,int pr[]){
+    int rootx = find(x,pr);
+    int rooty = find(y,pr);
+    if (rootx != rooty){
+        if(h[rootx] < h[rooty]){
+            pr[rootx] = rooty;
+        }
+        else if(h[rootx] > h[rooty]){
+            pr[rooty] = rootx;
+        }
+        else{
+            pr[rooty] = rootx;
+            h[rootx]++;
+        }
+    }
+}//height
+
+void union_by_size(int x,int y,int pr[],int size[]){
+    int rootx = find(x,pr);
+    int rooty = find(y,pr);
+    if (rootx != rooty){
+        if(size[rootx] < size[rooty]){
+            pr[rootx] = rooty;
+            size[rooty] += size[rootx];
+        }
+        else{
+            pr[rooty] = rootx;//先叠加再赋值
+            size[rootx] += size[rooty];
+        }
+    }
+}//size
+
+int main(){
+    int pr[100005];
+
+    int h[100005] = {1};//not equal
+    int size[100005] = {1};//equal
+//可以直接用pr数组代替size或h数组，省空间（根节点的pr存储负值，表示集合大小的相反数）.
+//初始化-1  判断是否为根节点时判断pr[x]<0 注意负数大小比较
+//但是代码可读性会差一些
+
+    for(int i = 0;i <= 100005;i++) pr[i] = i;
+
+    int n,m;
+    cin >> n >> m;
+
+    for(int i = 0;i < m;i++){
+        cin >> z[i] >> x[i] >> y[i];
+    }
+
+    for(int i = 0;i < m;i++){
+        if(z[i] == 1){
+            union(x[i],y[i],pr);
+        }
+        else if(z[i] == 2){
+            if(find(x[i],pr) == find(y[i],pr)){
+                cout << "Y" << endl;
+            }
+            else{
+                cout << "N" << endl;
+            }
+        }
+    }
+
+    return 0;
+}
