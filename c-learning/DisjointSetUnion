@@ -1,75 +1,83 @@
-#include<iostream>
-#include <algorithm>
+//这个可能有问题
+
+#include <bits/stdc++.h>
+#define MAXN 100005
 using namespace std;
 
-int find(int x,int pr[]){
+int pr[MAXN];
+int h[MAXN] = {1};      // not equal（按高度合并使用）
+int size[MAXN] = {1};   // equal（按大小合并使用）
+
+// 可以直接用pr数组代替size或h数组，省空间（根节点的pr存储负值，表示集合大小的相反数）.
+// 初始化-1  判断是否为根节点时判断pr[x]<0 注意负数大小比较
+// 但是代码可读性会差一些
+
+// 查找函数（路径压缩）
+int find_set(int x) {  // 移除多余的pr[]参数，使用全局数组
     if (pr[x] == x) return x;
-    else return pr[x] = find(pr[x],pr);
+    else return pr[x] = find_set(pr[x]);
 }
 
-void union(int x,int y,int pr[]){
-    int rootx = find(x,pr);
-    int rooty = find(y,pr);
-    if (rootx != rooty){
-        if(h[rootx] < h[rooty]){
+// 按高度合并
+void union_by_height(int x, int y) {  // 移除多余的pr[]参数
+    int rootx = find_set(x);  // 调用时不需要传pr
+    int rooty = find_set(y);
+    if (rootx != rooty) {
+        if (h[rootx] < h[rooty]) {
             pr[rootx] = rooty;
-        }
-        else if(h[rootx] > h[rooty]){
+        } else if (h[rootx] > h[rooty]) {
             pr[rooty] = rootx;
-        }
-        else{
+        } else {
             pr[rooty] = rootx;
             h[rootx]++;
         }
     }
-}//height
+} // height
 
-void union_by_size(int x,int y,int pr[],int size[]){
-    int rootx = find(x,pr);
-    int rooty = find(y,pr);
-    if (rootx != rooty){
-        if(size[rootx] < size[rooty]){
+// 按大小合并
+void union_by_size(int x, int y) {  // 移除多余的pr[]和size[]参数
+    int rootx = find_set(x);
+    int rooty = find_set(y);
+    if (rootx != rooty) {
+        if (size[rootx] < size[rooty]) {
             pr[rootx] = rooty;
             size[rooty] += size[rootx];
-        }
-        else{
-            pr[rooty] = rootx;//先叠加再赋值
+        } else {
+            pr[rooty] = rootx;  // 先叠加再赋值
             size[rootx] += size[rooty];
         }
     }
-}//size
+} // size
 
-int main(){
-    int pr[100005];
-
-    int h[100005] = {1};//not equal
-    int size[100005] = {1};//equal
-//可以直接用pr数组代替size或h数组，省空间（根节点的pr存储负值，表示集合大小的相反数）.
-//初始化-1  判断是否为根节点时判断pr[x]<0 注意负数大小比较
-//但是代码可读性会差一些
-
-    for(int i = 0;i <= 100005;i++) pr[i] = i;
-
-    int n,m;
+int main() {
+    ios::sync_with_stdio(false);  // 添加快速IO
+    cin.tie(nullptr);
+    
+    int n, m;
     cin >> n >> m;
-
-    for(int i = 0;i < m;i++){
-        cin >> z[i] >> x[i] >> y[i];
+    
+    // 正确初始化：所有元素都要赋值
+    for (int i = 0; i <= n; i++) {
+        pr[i] = i;
+        h[i] = 0;      // 高度初始为0
+        size[i] = 1;   // 大小初始为1
     }
-
-    for(int i = 0;i < m;i++){
-        if(z[i] == 1){
-            union(x[i],y[i],pr);
-        }
-        else if(z[i] == 2){
-            if(find(x[i],pr) == find(y[i],pr)){
-                cout << "Y" << endl;
-            }
-            else{
-                cout << "N" << endl;
+    
+    // 无需存储所有操作，直接处理
+    for (int i = 0; i < m; i++) {
+        int z, x, y;
+        cin >> z >> x >> y;
+        
+        if (z == 1) {
+            union_by_height(x, y);  // 使用按高度合并（或改用union_by_size）
+        } else if (z == 2) {
+            if (find_set(x) == find_set(y)) {
+                cout << "Y\n";
+            } else {
+                cout << "N\n";
             }
         }
     }
-
+    
     return 0;
 }
