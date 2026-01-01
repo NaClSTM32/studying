@@ -14,7 +14,7 @@ int main() {
     chang(str);
 
     for(int i = 0;i < 10;i++)
-        printf("%3d ",str[i]);
+        printf("%3d",str[i]);
         printf("\n");
     return 0;
 }
