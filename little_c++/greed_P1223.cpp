@@ -1,0 +1,38 @@
+#include<iostream>
+#include<algorithm>
+struct Node{
+int id;
+int t;
+} p[1002];
+
+bool cmp(Node aa,Node bb){//定义排序方法
+	return aa.t < bb.t;
+}
+int main(){
+    int n;
+   
+    
+    for(int i = 0;i < 1002;i++)
+        p[i].id = i+1;
+    
+    long long sum = 0;
+    double ans;
+    std::cin >> n;
+    for(int i = 0;i < n;i++){
+        std::cin >> p[i].t;
+    }
+    std::sort(p,p+n,cmp);
+    
+    for(int i = 0;i < n;i++){
+        sum += p[i].t * (n-i-1);
+    }
+
+    ans = (double)sum/n;
+
+    for(int i = 0;i < n;i++){
+        std::cout << p[i].id <<' ';
+    }
+    std::cout << '\n';
+    printf("%.2lf",ans);
+    return 0;
+}
