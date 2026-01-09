@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <stdlib.h>
+#include <stdlib.h> // for exit()
 
 int main(){
 	char c;
@@ -18,7 +18,7 @@ int main(){
 //    //fscanf(..., "%c")：它会把你输入的每一个字符都读进来，包括空格、回车、制表符。所以如果你输入“我 爱 你”，它存进文件会是“我 爱 你”（空格没丢）。
     /*
     while(1){
-        if (fscanf(stdin, " %c" , &c) != 1) break;
+        if (fscanf(stdin, " %c" , &c) != 1) break; //注意这里的空格
         if(c == '#') break;
         fputc(c,fp);
     }
@@ -26,7 +26,7 @@ int main(){
    //而
 //fgetc 和  getchar：它们是“老实人”，给什么搬什么。空格、回车、甚至中文字符的每一个字节，它都原封不动地搬运。
 /*	while(1){
-		if (fscanf(stdin, "%c" , &c) != 1) break;
+		if (fscanf(stdin, "%c" , &c) != 1) break;  //注意这里没有空格
 		if(c == '#') break;
 		fputc(c,fp);
 	}
